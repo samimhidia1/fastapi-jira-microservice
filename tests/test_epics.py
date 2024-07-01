@@ -1,8 +1,35 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from core.database import get_db_connection, return_db_connection
-from models import schemas
+from core.database import get_db_connection, return_db_connection, connection_pool
+import psycopg2.pool
+import os
+
+# Create a session-level fixture to initialize the database connection pool
+@pytest.fixture(scope="session", autouse=True)
+def initialize_connection_pool():
+    global connection_pool
+    try:
+        connection_pool = psycopg2.pool.SimpleConnectionPool(
+            1, 20,
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT"),
+            database=os.getenv("DB_NAME")
+        )
+        if connection_pool:
+            print("Connection pool initialized successfully")
+        else:
+            print("Failed to initialize connection pool")
+    except Exception as error:
+        print("Error while initializing connection pool", error)
+
+    yield
+
+    if connection_pool:
+        connection_pool.closeall()
+        print("Connection pool closed successfully")
 
 # Create a new database connection for testing
 @pytest.fixture(scope="module")
