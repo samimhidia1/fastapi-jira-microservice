@@ -25,7 +25,7 @@ EXPOSE 8000
 ENV PYTHONPATH=/app
 
 # Set environment variables for database connection
-ENV DB_HOST=host.docker.internal
+ENV DB_HOST=localhost
 ENV DB_PORT=5432
 ENV DB_NAME=test_db
 ENV DB_USER=test_user
