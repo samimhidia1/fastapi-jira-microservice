@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from app.core.database import engine
-from app.models import models
-from app.api.v1.endpoints import epics
+from core.database import engine
+from models import models
+from api.v1.endpoints import epics
 
 app = FastAPI()
 

@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
-from app.core.database import SessionLocal, Base, engine
-from app.models import schemas
+from main import app
+from core.database import SessionLocal, Base, engine
+from models import schemas
 
 # Create a new database session for testing
 @pytest.fixture(scope="module")
