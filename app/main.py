@@ -5,7 +5,6 @@ import psycopg2.pool
 import os
 from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
-from fastapi import Lifespan
 
 app = FastAPI()
 
