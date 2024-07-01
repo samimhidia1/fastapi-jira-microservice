@@ -12,6 +12,26 @@ DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
 # Initialize connection pool
 connection_pool = None
 
+# Function to initialize the connection pool
+def initialize_connection_pool():
+    global connection_pool
+    try:
+        connection_pool = psycopg2.pool.SimpleConnectionPool(
+            1, 20,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME
+        )
+        if connection_pool:
+            print("Connection pool created successfully")
+        else:
+            print("Failed to create connection pool")
+    except Exception as error:
+        print("Error while initializing connection pool", error)
+        raise
+
 # Function to get a connection from the pool
 def get_db_connection():
     global connection_pool

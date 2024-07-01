@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from api.v1.endpoints import epics
-from core.database import connection_pool
+from core.database import connection_pool, initialize_connection_pool
 import psycopg2.pool
 import os
 from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
+from fastapi import Lifespan
 
 app = FastAPI()
 
@@ -16,18 +17,10 @@ def read_root():
 def health_check():
     return {"status": "OK"}
 
-@app.on_event("startup")
-async def startup_event():
+async def lifespan(app: FastAPI):
     global connection_pool
     try:
-        connection_pool = psycopg2.pool.SimpleConnectionPool(
-            1, 20,
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT"),
-            database=os.getenv("DB_NAME")
-        )
+        initialize_connection_pool()
         if connection_pool:
             print("Connection pool initialized successfully")
         else:
@@ -35,12 +28,13 @@ async def startup_event():
     except Exception as error:
         print("Error while initializing connection pool", error)
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    global connection_pool
+    yield
+
     if connection_pool:
         connection_pool.closeall()
         print("Connection pool closed successfully")
+
+app.router.lifespan = lifespan
 
 # Include the router for epics
 app.include_router(epics.router)

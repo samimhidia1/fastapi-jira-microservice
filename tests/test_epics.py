@@ -1,14 +1,13 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from core.database import get_db_connection, return_db_connection, connection_pool
+from core.database import get_db_connection, return_db_connection, initialize_connection_pool
 import psycopg2.pool
 import os
 
 # Create a session-level fixture to initialize the database connection pool
 @pytest.fixture(scope="session", autouse=True)
-def initialize_connection_pool():
-    global connection_pool
+def initialize_connection_pool_fixture():
     try:
         print("Initializing connection pool with the following environment variables:")
         print("DB_USER:", os.getenv("DB_USER"))
@@ -17,14 +16,7 @@ def initialize_connection_pool():
         print("DB_PORT:", os.getenv("DB_PORT"))
         print("DB_NAME:", os.getenv("DB_NAME"))
 
-        connection_pool = psycopg2.pool.SimpleConnectionPool(
-            1, 20,
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT"),
-            database=os.getenv("DB_NAME")
-        )
+        initialize_connection_pool()
         if connection_pool:
             print("Connection pool initialized successfully")
         else:
