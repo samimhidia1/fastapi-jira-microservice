@@ -132,6 +132,8 @@ This document provides an overview of the available API endpoints in the FastAPI
 - `PUT /api/v1/test_cases/{test_case_id}`: Update a Test Case by ID
 - `DELETE /api/v1/test_cases/{test_case_id}`: Delete a Test Case by ID
 
+- `GET /health`: Health check endpoint
+
 ## Data Models
 
 This document describes the data models used in the FastAPI Jira Microservice.
@@ -172,7 +174,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```
 
 ## Advanced Features
@@ -292,3 +294,11 @@ To deploy the application on Scaleway serverless container via the container reg
    - Deploy the container.
 
 6. Access the deployed application via the provided URL.
+```
+
+Note: SQLAlchemy and Alembic have been removed from the project. You will need to set up the PostgreSQL database schema manually.
+
+4. Set up the PostgreSQL database connection:
+   - Ensure the PostgreSQL database is running and accessible.
+   - Update the `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` environment variables in the Dockerfile or `.env` file with the correct values.
+   - If the database is running on the host machine, use the host's IP address instead of `host.docker.internal`.
