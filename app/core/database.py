@@ -10,23 +10,11 @@ DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
 
 # Initialize connection pool
-try:
-    connection_pool = psycopg2.pool.SimpleConnectionPool(
-        1, 20,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME
-    )
-    if connection_pool:
-        print("Connection pool created successfully")
-except Exception as error:
-    connection_pool = None
-    print("Error while connecting to PostgreSQL", error)
+connection_pool = None
 
 # Function to get a connection from the pool
 def get_db_connection():
+    global connection_pool
     try:
         if connection_pool:
             connection = connection_pool.getconn()
@@ -41,6 +29,7 @@ def get_db_connection():
 
 # Function to return a connection to the pool
 def return_db_connection(connection):
+    global connection_pool
     try:
         if connection_pool:
             connection_pool.putconn(connection)
