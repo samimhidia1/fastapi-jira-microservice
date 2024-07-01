@@ -22,22 +22,31 @@ try:
     if connection_pool:
         print("Connection pool created successfully")
 except Exception as error:
+    connection_pool = None
     print("Error while connecting to PostgreSQL", error)
 
 # Function to get a connection from the pool
 def get_db_connection():
     try:
-        connection = connection_pool.getconn()
-        if connection:
-            print("Successfully received a connection from the connection pool")
-            return connection
+        if connection_pool:
+            connection = connection_pool.getconn()
+            if connection:
+                print("Successfully received a connection from the connection pool")
+                return connection
+        else:
+            raise Exception("Connection pool is not initialized")
     except Exception as error:
         print("Error while getting a connection from the connection pool", error)
+        raise
 
 # Function to return a connection to the pool
 def return_db_connection(connection):
     try:
-        connection_pool.putconn(connection)
-        print("Successfully returned a connection to the connection pool")
+        if connection_pool:
+            connection_pool.putconn(connection)
+            print("Successfully returned a connection to the connection pool")
+        else:
+            raise Exception("Connection pool is not initialized")
     except Exception as error:
         print("Error while returning a connection to the connection pool", error)
+        raise
