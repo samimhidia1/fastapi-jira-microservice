@@ -7,5 +7,9 @@ app = FastAPI()
 def read_root():
     return {"message": "Welcome to the FastAPI Jira Microservice"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "OK"}
+
 # Include the router for epics
 app.include_router(epics.router)

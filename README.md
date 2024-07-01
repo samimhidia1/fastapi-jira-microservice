@@ -73,7 +73,7 @@ The project is organized into a single FastAPI Jira Microservice, the AI Agent i
    \q
    ```
 
-5. Set up the PostgreSQL database schema manually or using a preferred migration tool.
+5. Set up the PostgreSQL database schema manually.
 
 6. Run the FastAPI application:
    ```bash
@@ -253,7 +253,7 @@ To run the project locally, follow these steps:
    \q
    ```
 
-5. Set up the PostgreSQL database schema manually or using a preferred migration tool.
+5. Set up the PostgreSQL database schema manually.
 
 6. Run the FastAPI application:
    ```bash

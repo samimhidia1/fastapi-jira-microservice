@@ -12,6 +12,9 @@ COPY ./requirements.txt /app/requirements.txt
 # Install the dependencies
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
+# Install PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Expose the port that the application will run on
 EXPOSE 8000
 
@@ -19,4 +22,4 @@ EXPOSE 8000
 ENV PYTHONPATH=/app
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
