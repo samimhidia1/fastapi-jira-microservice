@@ -6,6 +6,9 @@ WORKDIR /app
 # Copy the application code
 COPY ./app /app
 
+# Copy the tests directory
+COPY ./tests /app/tests
+
 # Copy the requirements file
 COPY ./requirements.txt /app/requirements.txt
 
