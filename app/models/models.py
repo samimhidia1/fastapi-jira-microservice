@@ -1,53 +1,39 @@
-from sqlalchemy import Column, String, Text, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from app.core.database import Base
+# Since we are removing SQLAlchemy, we will define the models using plain Python classes and psycopg2 for database interactions.
 
-class Epic(Base):
-    __tablename__ = "epics"
+class Epic:
+    def __init__(self, id, summary, description, project_key, custom_fields):
+        self.id = id
+        self.summary = summary
+        self.description = description
+        self.project_key = project_key
+        self.custom_fields = custom_fields
+        self.stories = []
 
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    summary = Column(String, index=True)
-    description = Column(Text)
-    project_key = Column(String)
-    custom_fields = Column(Text)
+class Story:
+    def __init__(self, id, summary, description, project_key, custom_fields, epic_id):
+        self.id = id
+        self.summary = summary
+        self.description = description
+        self.project_key = project_key
+        self.custom_fields = custom_fields
+        self.epic_id = epic_id
+        self.tasks = []
 
-    stories = relationship("Story", back_populates="epic")
+class Task:
+    def __init__(self, id, summary, description, project_key, custom_fields, story_id):
+        self.id = id
+        self.summary = summary
+        self.description = description
+        self.project_key = project_key
+        self.custom_fields = custom_fields
+        self.story_id = story_id
+        self.test_cases = []
 
-class Story(Base):
-    __tablename__ = "stories"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    summary = Column(String, index=True)
-    description = Column(Text)
-    project_key = Column(String)
-    custom_fields = Column(Text)
-    epic_id = Column(UUID(as_uuid=True), ForeignKey("epics.id"))
-
-    epic = relationship("Epic", back_populates="stories")
-    tasks = relationship("Task", back_populates="story")
-
-class Task(Base):
-    __tablename__ = "tasks"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    summary = Column(String, index=True)
-    description = Column(Text)
-    project_key = Column(String)
-    custom_fields = Column(Text)
-    story_id = Column(UUID(as_uuid=True), ForeignKey("stories.id"))
-
-    story = relationship("Story", back_populates="tasks")
-    test_cases = relationship("TestCase", back_populates="task")
-
-class TestCase(Base):
-    __tablename__ = "test_cases"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, index=True)
-    summary = Column(String, index=True)
-    description = Column(Text)
-    project_key = Column(String)
-    custom_fields = Column(Text)
-    task_id = Column(UUID(as_uuid=True), ForeignKey("tasks.id"))
-
-    task = relationship("Task", back_populates="test_cases")
+class TestCase:
+    def __init__(self, id, summary, description, project_key, custom_fields, task_id):
+        self.id = id
+        self.summary = summary
+        self.description = description
+        self.project_key = project_key
+        self.custom_fields = custom_fields
+        self.task_id = task_id
