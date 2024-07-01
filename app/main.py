@@ -16,7 +16,8 @@ def read_root():
 def health_check():
     return {"status": "OK"}
 
-async def lifespan(app: FastAPI):
+@app.on_event("startup")
+async def startup_event():
     global connection_pool
     try:
         connection_pool = psycopg2.pool.SimpleConnectionPool(
@@ -34,8 +35,9 @@ async def lifespan(app: FastAPI):
     except Exception as error:
         print("Error while initializing connection pool", error)
 
-    yield
-
+@app.on_event("shutdown")
+async def shutdown_event():
+    global connection_pool
     if connection_pool:
         connection_pool.closeall()
         print("Connection pool closed successfully")
