@@ -1,19 +1,17 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from core.database import SessionLocal, Base, engine
+from core.database import get_db_connection, return_db_connection
 from models import schemas
 
-# Create a new database session for testing
+# Create a new database connection for testing
 @pytest.fixture(scope="module")
 def test_db():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
+    connection = get_db_connection()
     try:
-        yield db
+        yield connection
     finally:
-        db.close()
-        Base.metadata.drop_all(bind=engine)
+        return_db_connection(connection)
 
 # Create a TestClient instance
 client = TestClient(app)
