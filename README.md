@@ -73,10 +73,7 @@ The project is organized into a single FastAPI Jira Microservice, the AI Agent i
    \q
    ```
 
-5. Run Alembic migrations to set up the database schema:
-   ```bash
-   alembic upgrade head
-   ```
+5. Set up the PostgreSQL database schema manually or using a preferred migration tool.
 
 6. Run the FastAPI application:
    ```bash
@@ -215,10 +212,6 @@ fastapi_jira_microservice/
 │   ├── tests/
 │   │   ├── __init__.py
 │   │   ├── test_epics.py
-├── alembic/
-│   ├── versions/
-│   ├── env.py
-│   ├── script.py.mako
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci-cd-pipeline.yml
@@ -227,7 +220,6 @@ fastapi_jira_microservice/
 ├── Dockerfile
 ├── README.md
 ├── requirements.txt
-├── alembic.ini
 ```
 
 ## Running the Project
@@ -261,10 +253,7 @@ To run the project locally, follow these steps:
    \q
    ```
 
-5. Run Alembic migrations to set up the database schema:
-   ```bash
-   alembic upgrade head
-   ```
+5. Set up the PostgreSQL database schema manually or using a preferred migration tool.
 
 6. Run the FastAPI application:
    ```bash

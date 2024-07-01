@@ -15,5 +15,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Expose the port that the application will run on
 EXPOSE 8000
 
+# Set the PYTHONPATH environment variable to include the current working directory
+ENV PYTHONPATH=/app
+
 # Command to run the application
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
