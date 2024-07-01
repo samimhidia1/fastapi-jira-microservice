@@ -10,6 +10,13 @@ import os
 def initialize_connection_pool():
     global connection_pool
     try:
+        print("Initializing connection pool with the following environment variables:")
+        print("DB_USER:", os.getenv("DB_USER"))
+        print("DB_PASSWORD:", os.getenv("DB_PASSWORD"))
+        print("DB_HOST:", os.getenv("DB_HOST"))
+        print("DB_PORT:", os.getenv("DB_PORT"))
+        print("DB_NAME:", os.getenv("DB_NAME"))
+
         connection_pool = psycopg2.pool.SimpleConnectionPool(
             1, 20,
             user=os.getenv("DB_USER"),
