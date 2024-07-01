@@ -189,3 +189,117 @@ The FastAPI Jira Microservice includes several advanced features to enhance func
 5. **User Permissions and Roles**: Enhanced security and access control through user permissions and roles.
 6. **Activity Logs**: Comprehensive tracking and logging of activities for auditing purposes.
 7. **Webhooks**: Support for real-time updates and notifications through webhooks.
+
+## Directory Structure
+
+The project directory structure is organized as follows:
+
+```
+fastapi_jira_microservice/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── schemas.py
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── epics.py
+│   │   ├── stories.py
+│   │   ├── tasks.py
+│   │   ├── test_cases.py
+│   ├── tests/
+│   │   ├── __init__.py
+│   │   ├── test_epics.py
+├── alembic/
+│   ├── versions/
+│   ├── env.py
+│   ├── script.py.mako
+├── .github/
+│   ├── workflows/
+│   │   ├── ci-cd-pipeline.yml
+├── .env
+├── .gitignore
+├── Dockerfile
+├── README.md
+├── requirements.txt
+├── alembic.ini
+```
+
+## Running the Project
+
+To run the project locally, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/samimhidia1/fastapi-jira-microservice.git
+   cd fastapi-jira-microservice
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. Install the dependencies:
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. Set up the PostgreSQL database:
+   ```bash
+   sudo -u postgres psql
+   CREATE USER devin WITH PASSWORD 'password';
+   CREATE DATABASE dbname;
+   GRANT ALL PRIVILEGES ON DATABASE dbname TO devin;
+   \q
+   ```
+
+5. Run Alembic migrations to set up the database schema:
+   ```bash
+   alembic upgrade head
+   ```
+
+6. Run the FastAPI application:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+
+## Deployment on Scaleway Serverless Container
+
+To deploy the application on Scaleway serverless container via the container registry, follow these steps:
+
+1. Build the Docker image:
+   ```bash
+   docker build -t fastapi-jira-microservice .
+   ```
+
+2. Tag the Docker image for the Scaleway container registry:
+   ```bash
+   docker tag fastapi-jira-microservice rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
+   ```
+
+3. Log in to the Scaleway container registry:
+   ```bash
+   docker login rg.fr-par.scw.cloud
+   ```
+
+4. Push the Docker image to the Scaleway container registry:
+   ```bash
+   docker push rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
+   ```
+
+5. Deploy the image to Scaleway serverless container:
+   - Go to the Scaleway Console.
+   - Navigate to the "Serverless Containers" section.
+   - Create a new container and configure it to use the pushed Docker image.
+   - Set the necessary environment variables and configuration options.
+   - Deploy the container.
+
+6. Access the deployed application via the provided URL.
