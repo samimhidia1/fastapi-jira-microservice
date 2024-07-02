@@ -5,6 +5,9 @@ from core.database import get_db_connection, return_db_connection, initialize_co
 import psycopg2.pool
 import os
 
+# Initialize connection pool at the module level
+connection_pool = None
+
 # Create a session-level fixture to initialize the database connection pool
 @pytest.fixture(scope="session", autouse=True)
 def initialize_connection_pool_fixture():
