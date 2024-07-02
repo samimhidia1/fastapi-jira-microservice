@@ -52,7 +52,7 @@ def test_create_epic(test_db):
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
-        "custom_fields": None
+        "custom_fields": {}
     })
     print("Create Epic Response:", response.json())
     assert response.status_code == 200
@@ -65,7 +65,7 @@ def test_get_epic(test_db):
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
-        "custom_fields": None
+        "custom_fields": {}
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
@@ -83,7 +83,7 @@ def test_update_epic(test_db):
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
-        "custom_fields": None
+        "custom_fields": {}
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
@@ -94,7 +94,7 @@ def test_update_epic(test_db):
         "description": "This is an updated test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
-        "custom_fields": None
+        "custom_fields": {}
     })
     print("Update Epic Response:", response.json())
     assert response.status_code == 200
@@ -107,7 +107,7 @@ def test_delete_epic(test_db):
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
-        "custom_fields": None
+        "custom_fields": {}
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
