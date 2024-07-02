@@ -24,8 +24,11 @@ def create_epic(epic: schemas.IssueCreate):
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
 
-        # Deserialize custom_fields from JSON string to dictionary
-        custom_fields = json.loads(db_epic[4])
+        # Deserialize custom_fields from JSON string to dictionary if it is valid JSON
+        try:
+            custom_fields = json.loads(db_epic[4])
+        except (TypeError, json.JSONDecodeError):
+            custom_fields = db_epic[4]
         return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
