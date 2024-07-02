@@ -30,7 +30,13 @@ def create_epic(epic: schemas.IssueCreate):
             custom_fields = json.loads(db_epic[4])
         except (TypeError, json.JSONDecodeError):
             custom_fields = db_epic[4]
-        response_data = {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
+        response_data = {
+            "id": str(db_epic[0]),
+            "summary": db_epic[1],
+            "description": db_epic[2],
+            "project_key": str(db_epic[3]),  # Ensure project_key is a string
+            "custom_fields": custom_fields  # Ensure custom_fields is a dictionary
+        }
         print("Response data:", response_data)
         return response_data
     finally:
