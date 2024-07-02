@@ -267,33 +267,66 @@ To run the project locally, follow these steps:
 To deploy the application on Scaleway serverless container via the container registry, follow these steps:
 
 1. Build the Docker image:
-   ```bash
-   docker build -t fastapi-jira-microservice .
-   ```
+    ```bash
+    docker build -t fastapi-jira-microservice .
+    ```
 
 2. Tag the Docker image for the Scaleway container registry:
-   ```bash
-   docker tag fastapi-jira-microservice rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
-   ```
+    ```bash
+    docker tag fastapi-jira-microservice rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
+    ```
 
 3. Log in to the Scaleway container registry:
-   ```bash
-   docker login rg.fr-par.scw.cloud
-   ```
+    ```bash
+    docker login rg.fr-par.scw.cloud
+    ```
 
 4. Push the Docker image to the Scaleway container registry:
-   ```bash
-   docker push rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
-   ```
+    ```bash
+    docker push rg.fr-par.scw.cloud/YOUR_NAMESPACE/fastapi-jira-microservice:latest
+    ```
 
 5. Deploy the image to Scaleway serverless container:
-   - Go to the Scaleway Console.
-   - Navigate to the "Serverless Containers" section.
-   - Create a new container and configure it to use the pushed Docker image.
-   - Set the necessary environment variables and configuration options.
-   - Deploy the container.
+    - Go to the Scaleway Console.
+    - Navigate to the "Serverless Containers" section.
+    - Create a new container and configure it to use the pushed Docker image.
+    - Set the necessary environment variables and configuration options.
+    - Deploy the container.
 
 6. Access the deployed application via the provided URL.
+
+Note: SQLAlchemy and Alembic have been removed from the project. You will need to set up the PostgreSQL database schema manually.
+
+## Running Tests
+
+To run the tests for the FastAPI Jira Microservice, follow these steps:
+
+1. Ensure the PostgreSQL database is running and accessible.
+2. Set the necessary environment variables for the database connection.
+3. Run the tests using pytest:
+    ```bash
+    pytest
+    ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Issues**:
+    - Ensure the PostgreSQL database is running and accessible.
+    - Verify the database connection details in the environment variables.
+
+2. **Docker Container Issues**:
+    - Check the Docker container logs for any errors.
+    - Ensure the Docker containers are running and properly configured.
+
+3. **API Endpoint Errors**:
+    - Verify the API endpoint URLs and request payloads.
+    - Check the application logs for any errors or exceptions.
+
+4. **Test Failures**:
+    - Ensure the test data is valid and matches the expected format.
+    - Check the test logs for any errors or failures.
 ```
 
 Note: SQLAlchemy and Alembic have been removed from the project. You will need to set up the PostgreSQL database schema manually.
