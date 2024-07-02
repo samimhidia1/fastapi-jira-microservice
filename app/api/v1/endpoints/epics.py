@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException
 import requests
 import uuid
 import json
-from models import schemas, models
-from core.database import get_db_connection, return_db_connection
+from app.models import schemas, models
+from app.core.database import get_db_connection, return_db_connection
 
 router = APIRouter()
 

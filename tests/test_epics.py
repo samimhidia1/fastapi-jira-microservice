@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from main import app
+from app.main import app
 from core.database import get_db_connection, return_db_connection, initialize_connection_pool
 import psycopg2.pool
 import os
