@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.v1.endpoints import epics
-from core.database import connection_pool, initialize_connection_pool
+from app.api.v1.endpoints import epics
+from app.core.database import connection_pool, initialize_connection_pool
 import psycopg2.pool
 import os
 from fastapi import FastAPI, Request
