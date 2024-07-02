@@ -4,6 +4,7 @@ from main import app
 from core.database import get_db_connection, return_db_connection, initialize_connection_pool
 import psycopg2.pool
 import os
+import uuid
 
 # Initialize connection pool at the module level
 connection_pool = None
