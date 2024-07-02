@@ -40,7 +40,14 @@ def get_epics():
         cursor = db.cursor()
         cursor.execute("SELECT * FROM epics")
         epics = cursor.fetchall()
-        return [{"id": str(epic[0]), "summary": epic[1], "description": epic[2], "project_key": epic[3], "custom_fields": epic[4]} for epic in epics]
+        result = []
+        for epic in epics:
+            try:
+                custom_fields = json.loads(epic[4])
+            except (TypeError, json.JSONDecodeError):
+                custom_fields = epic[4]
+            result.append({"id": str(epic[0]), "summary": epic[1], "description": epic[2], "project_key": epic[3], "custom_fields": custom_fields})
+        return result
     finally:
         return_db_connection(db)
 
@@ -53,7 +60,11 @@ def get_epic(epic_id: str):
         db_epic = cursor.fetchone()
         if db_epic is None:
             raise HTTPException(status_code=404, detail="Epic not found")
-        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": db_epic[4]}
+        try:
+            custom_fields = json.loads(db_epic[4])
+        except (TypeError, json.JSONDecodeError):
+            custom_fields = db_epic[4]
+        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
 
@@ -74,7 +85,11 @@ def update_epic(epic_id: str, epic: schemas.IssueCreate):
         db.commit()
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
-        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": db_epic[4]}
+        try:
+            custom_fields = json.loads(db_epic[4])
+        except (TypeError, json.JSONDecodeError):
+            custom_fields = db_epic[4]
+        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
 
@@ -89,6 +104,10 @@ def delete_epic(epic_id: str):
             raise HTTPException(status_code=404, detail="Epic not found")
         cursor.execute("DELETE FROM epics WHERE id = %s", (epic_id,))
         db.commit()
-        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": db_epic[4]}
+        try:
+            custom_fields = json.loads(db_epic[4])
+        except (TypeError, json.JSONDecodeError):
+            custom_fields = db_epic[4]
+        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
