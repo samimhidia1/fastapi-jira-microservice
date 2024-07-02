@@ -11,52 +11,21 @@ router = APIRouter()
 def create_epic(epic: schemas.IssueCreate):
     db = get_db_connection()
     try:
-        # Create the epic in the local database
-        db_epic = models.Epic(
-            id=str(uuid.uuid4()),  # Generate a UUID for the id field
-            summary=epic.summary,
-            description=epic.description,
-            project_key=epic.project_key,
-            custom_fields=json.dumps(epic.custom_fields)  # Serialize custom_fields to JSON
-        )
-        db.add(db_epic)
+        # Create the epic in the local database using raw SQL
+        cursor = db.cursor()
+        epic_id = str(uuid.uuid4())  # Generate a UUID for the id field
+        cursor.execute("""
+            INSERT INTO epics (id, summary, description, project_key, custom_fields)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (epic_id, epic.summary, epic.description, epic.project_key, json.dumps(epic.custom_fields)))
         db.commit()
-        db.refresh(db_epic)
 
-        # Commenting out the Jira API request for testing purposes
-        # Prepare the data for the Jira API request
-        # jira_url = "https://your-jira-instance.atlassian.net/rest/api/3/issue"
-        # jira_auth = ("your-email@example.com", "your-api-token")
-        # headers = {
-        #     "Accept": "application/json",
-        #     "Content-Type": "application/json"
-        # }
-        # payload = {
-        #     "fields": {
-        #         "summary": epic.summary,
-        #         "description": epic.description,
-        #         "project": {
-        #             "key": epic.project_key
-        #         },
-        #         "issuetype": {
-        #             "name": "Epic"
-        #         },
-        #         "customfield_10011": epic.custom_fields  # Adjust the custom field ID as needed
-        #     }
-        # }
-
-        # Send the request to Jira
-        # response = requests.post(jira_url, json=payload, headers=headers, auth=jira_auth)
-
-        # Handle the response from Jira
-        # if response.status_code == 201:
-        #     jira_issue = response.json()
-        #     return {"id": db_epic.id, "summary": db_epic.summary, "description": db_epic.description, "project_key": db_epic.project_key, "custom_fields": db_epic.custom_fields}
-        # else:
-        #     raise HTTPException(status_code=response.status_code, detail=response.text)
+        # Fetch the created epic to return its details
+        cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
+        db_epic = cursor.fetchone()
 
         # Return the created epic details
-        return {"id": str(db_epic.id), "summary": db_epic.summary, "description": db_epic.description, "project_key": db_epic.project_key, "custom_fields": db_epic.custom_fields}
+        return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": db_epic[4]}
     finally:
         return_db_connection(db)
 
