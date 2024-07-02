@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import requests
 import uuid
 import json
@@ -28,8 +28,10 @@ def create_epic(epic: schemas.IssueCreate):
         # Deserialize custom_fields from JSON string to dictionary if it is valid JSON
         try:
             custom_fields = json.loads(db_epic[4])
+            if not isinstance(custom_fields, dict):
+                custom_fields = {}
         except (TypeError, json.JSONDecodeError):
-            custom_fields = db_epic[4]
+            custom_fields = {}
         response_data = {
             "id": str(db_epic[0]),
             "summary": db_epic[1],
@@ -53,8 +55,10 @@ def get_epics():
         for epic in epics:
             try:
                 custom_fields = json.loads(epic[4])
+                if not isinstance(custom_fields, dict):
+                    custom_fields = {}
             except (TypeError, json.JSONDecodeError):
-                custom_fields = epic[4]
+                custom_fields = {}
             result.append({"id": str(epic[0]), "summary": epic[1], "description": epic[2], "project_key": epic[3], "custom_fields": custom_fields})
         return result
     finally:
@@ -65,14 +69,18 @@ def get_epic(epic_id: str):
     db = get_db_connection()
     try:
         cursor = db.cursor()
+        print(f"Executing query: SELECT * FROM epics WHERE id = {epic_id}")
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
+        print(f"Query result: {db_epic}")
         if db_epic is None:
             raise HTTPException(status_code=404, detail="Epic not found")
         try:
             custom_fields = json.loads(db_epic[4])
+            if not isinstance(custom_fields, dict):
+                custom_fields = {}
         except (TypeError, json.JSONDecodeError):
-            custom_fields = db_epic[4]
+            custom_fields = {}
         return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
@@ -82,8 +90,10 @@ def update_epic(epic_id: str, epic: schemas.IssueCreate):
     db = get_db_connection()
     try:
         cursor = db.cursor()
+        print(f"Executing query: SELECT * FROM epics WHERE id = {epic_id}")
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
+        print(f"Query result: {db_epic}")
         if db_epic is None:
             raise HTTPException(status_code=404, detail="Epic not found")
         cursor.execute("""
@@ -94,10 +104,13 @@ def update_epic(epic_id: str, epic: schemas.IssueCreate):
         db.commit()
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
+        print(f"Updated epic: {db_epic}")
         try:
             custom_fields = json.loads(db_epic[4])
+            if not isinstance(custom_fields, dict):
+                custom_fields = {}
         except (TypeError, json.JSONDecodeError):
-            custom_fields = db_epic[4]
+            custom_fields = {}
         return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
@@ -107,16 +120,21 @@ def delete_epic(epic_id: str):
     db = get_db_connection()
     try:
         cursor = db.cursor()
+        print(f"Executing query: SELECT * FROM epics WHERE id = {epic_id}")
         cursor.execute("SELECT * FROM epics WHERE id = %s", (epic_id,))
         db_epic = cursor.fetchone()
+        print(f"Query result: {db_epic}")
         if db_epic is None:
             raise HTTPException(status_code=404, detail="Epic not found")
         cursor.execute("DELETE FROM epics WHERE id = %s", (epic_id,))
         db.commit()
+        print(f"Deleted epic: {epic_id}")
         try:
             custom_fields = json.loads(db_epic[4])
+            if not isinstance(custom_fields, dict):
+                custom_fields = {}
         except (TypeError, json.JSONDecodeError):
-            custom_fields = db_epic[4]
+            custom_fields = {}
         return {"id": str(db_epic[0]), "summary": db_epic[1], "description": db_epic[2], "project_key": db_epic[3], "custom_fields": custom_fields}
     finally:
         return_db_connection(db)
