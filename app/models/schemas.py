@@ -14,6 +14,12 @@ class IssueBase(BaseModel):
             return json.loads(v)
         return v
 
+    @field_validator('project_key')
+    def validate_project_key(cls, v):
+        if v is None or not isinstance(v, str):
+            raise ValueError("project_key must be a valid string")
+        return v
+
 class IssueCreate(IssueBase):
     issuetype: str
     epic_id: Optional[str] = None
