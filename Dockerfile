@@ -25,11 +25,11 @@ EXPOSE 8000
 ENV PYTHONPATH=/app
 
 # Set environment variables for database connection
-ENV DB_HOST=localhost
-ENV DB_PORT=5432
-ENV DB_NAME=test_db
-ENV DB_USER=test_user
-ENV DB_PASSWORD=test_password
+ENV DB_HOST=51.159.75.72
+ENV DB_PORT=3636
+ENV DB_NAME=jira
+ENV DB_USER=jira
+ENV DB_PASSWORD=jira&Samou123
 
 # Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
