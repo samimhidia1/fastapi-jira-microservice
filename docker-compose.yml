@@ -9,8 +9,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DB_HOST: 51.159.75.72
-      DB_PORT: 3636
+      DB_HOST: db
+      DB_PORT: 5432
       DB_NAME: jira
       DB_USER: jira
       DB_PASSWORD: jira&Samou123
@@ -25,7 +25,7 @@ services:
       POSTGRES_USER: jira
       POSTGRES_PASSWORD: jira&Samou123
     ports:
-      - "3636:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

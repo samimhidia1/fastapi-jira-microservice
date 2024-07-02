@@ -59,3 +59,6 @@ def return_db_connection(connection):
     except Exception as error:
         print("Error while returning a connection to the connection pool", error)
         raise
+
+# Initialize the connection pool when the module is imported
+initialize_connection_pool()

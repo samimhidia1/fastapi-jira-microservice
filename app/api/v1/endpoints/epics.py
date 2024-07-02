@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.post("/api/v1/epics/", response_model=schemas.Epic)
 def create_epic(epic: schemas.IssueCreate):
-    print("Received request data:", epic.dict())
+    print("Received request data:", epic.model_dump())
     db = get_db_connection()
     try:
         # Create the epic in the local database using raw SQL
