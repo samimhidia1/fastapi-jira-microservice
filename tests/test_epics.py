@@ -49,7 +49,7 @@ client = TestClient(app)
 
 def test_create_epic(test_db):
     response = client.post("/api/v1/epics/", json={
-        "summary": "Test Epic",
+        "summary": str(uuid.uuid4()),
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
@@ -58,11 +58,12 @@ def test_create_epic(test_db):
     print("Create Epic Response:", response.json())
     assert response.status_code == 200
     assert response.json()["id"] is not None
+    assert uuid.UUID(response.json()["id"])  # Ensure the id is a valid UUID
 
 def test_get_epic(test_db):
     # First, create an epic to retrieve
     create_response = client.post("/api/v1/epics/", json={
-        "summary": "Test Epic",
+        "summary": str(uuid.uuid4()),
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
@@ -70,17 +71,18 @@ def test_get_epic(test_db):
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
+    assert uuid.UUID(epic_id)  # Ensure the id is a valid UUID
 
     # Now, retrieve the epic by ID
     response = client.get(f"/api/v1/epics/{epic_id}")
     print("Get Epic Response:", response.json())
     assert response.status_code == 200
-    assert response.json()["summary"] == "Test Epic"
+    assert response.json()["summary"] == create_response.json()["summary"]
 
 def test_update_epic(test_db):
     # First, create an epic to update
     create_response = client.post("/api/v1/epics/", json={
-        "summary": "Test Epic",
+        "summary": str(uuid.uuid4()),
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
@@ -88,6 +90,7 @@ def test_update_epic(test_db):
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
+    assert uuid.UUID(epic_id)  # Ensure the id is a valid UUID
 
     # Now, update the epic
     response = client.put(f"/api/v1/epics/{epic_id}", json={
@@ -104,7 +107,7 @@ def test_update_epic(test_db):
 def test_delete_epic(test_db):
     # First, create an epic to delete
     create_response = client.post("/api/v1/epics/", json={
-        "summary": "Test Epic",
+        "summary": str(uuid.uuid4()),
         "description": "This is a test epic",
         "project_key": "TEST",
         "issuetype": "Epic",
@@ -112,6 +115,7 @@ def test_delete_epic(test_db):
     })
     print("Create Epic Response:", create_response.json())
     epic_id = create_response.json()["id"]
+    assert uuid.UUID(epic_id)  # Ensure the id is a valid UUID
 
     # Now, delete the epic
     response = client.delete(f"/api/v1/epics/{epic_id}")
